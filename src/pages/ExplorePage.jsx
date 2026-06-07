@@ -8,13 +8,13 @@ import Modal from '../components/ui/Modal';
 import API from '../utils/api';
 import toast from 'react-hot-toast';
 import {
-  HiMagnifyingGlass,
-  HiXMark,
-  HiChevronLeft,
-  HiChevronRight,
-  HiFunnel,
-  HiCheck,
-} from 'react-icons/hi2';
+  Search,
+  X,
+  ChevronLeft,
+  ChevronRight,
+  Filter,
+  Check,
+} from 'lucide-react';
 
 const categories = [
   { key: '', label: 'All', icon: '🌐' },
@@ -103,6 +103,7 @@ const ExplorePage = () => {
     try {
       const result = await dispatch(toggleVisit({ placeId })).unwrap();
       toast.success(result.message);
+      loadPlaces();
     } catch (err) {
       toast.error(err || 'Failed to toggle visit');
     }
@@ -205,7 +206,7 @@ const ExplorePage = () => {
         </div>
         <div className="w-full bg-zinc-200 rounded-full h-2 overflow-hidden">
           <div
-            className="bg-zinc-900 h-full rounded-full transition-all duration-500 ease-out"
+            className="bg-gradient-to-r from-primary-600 to-accent-500 h-full rounded-full transition-all duration-500 ease-out"
             style={{ width: `${percentage}%` }}
           />
         </div>
@@ -261,11 +262,11 @@ const ExplorePage = () => {
                   <button
                     className={`w-7 h-7 rounded-md flex items-center justify-center flex-shrink-0 transition-all duration-200 ${
                       isItemVisited
-                        ? 'bg-zinc-900 text-white'
+                        ? 'bg-primary-600 text-white'
                         : 'bg-zinc-100 text-zinc-300 hover:text-zinc-600 hover:bg-zinc-200 border border-zinc-200'
                     }`}
                   >
-                    <HiCheck className="w-4 h-4" />
+                    <Check className="w-4 h-4" />
                   </button>
                 </div>
               );
@@ -298,7 +299,7 @@ const ExplorePage = () => {
                 onClick={() => handleCategoryChange(cat.key)}
                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-all duration-200 ${
                   activeCategory === cat.key
-                    ? 'bg-zinc-900 text-white'
+                    ? 'bg-primary-600 text-white'
                     : 'bg-zinc-100 text-zinc-500 hover:text-zinc-900 hover:bg-zinc-200'
                 }`}
               >
@@ -311,7 +312,7 @@ const ExplorePage = () => {
           {/* Search + Country */}
           <div className="flex flex-col sm:flex-row gap-3">
             <form onSubmit={handleSearch} className="flex-1 relative">
-              <HiMagnifyingGlass className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
               <input
                 type="text"
                 value={searchInput}
@@ -325,13 +326,13 @@ const ExplorePage = () => {
                   onClick={clearSearch}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-700"
                 >
-                  <HiXMark className="w-4 h-4" />
+                  <X className="w-4 h-4" />
                 </button>
               )}
             </form>
 
             <div className="relative">
-              <HiFunnel className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400 pointer-events-none" />
+              <Filter className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
               <select
                 value={selectedCountry}
                 onChange={handleCountryChange}
@@ -353,7 +354,7 @@ const ExplorePage = () => {
           <LoadingSpinner text="Loading places..." />
         ) : places.length === 0 ? (
           <div className="card text-center py-16">
-            <HiMagnifyingGlass className="w-10 h-10 text-zinc-300 mx-auto mb-4" />
+            <Search className="w-10 h-10 text-zinc-300 mx-auto mb-4" />
             <h3 className="text-base font-semibold text-zinc-500 mb-2">
               No places found
             </h3>
@@ -387,7 +388,7 @@ const ExplorePage = () => {
                   disabled={currentPage === 1}
                   className="btn-secondary !px-2.5 !py-2 disabled:opacity-30"
                 >
-                  <HiChevronLeft className="w-4 h-4" />
+                  <ChevronLeft className="w-4 h-4" />
                 </button>
 
                 {Array.from({ length: Math.min(5, pages) }, (_, i) => {
@@ -407,7 +408,7 @@ const ExplorePage = () => {
                       onClick={() => setCurrentPage(pageNum)}
                       className={`w-9 h-9 rounded-md text-sm font-medium transition-all duration-200 ${
                         currentPage === pageNum
-                          ? 'bg-zinc-900 text-white'
+                          ? 'bg-primary-600 text-white'
                           : 'bg-zinc-100 text-zinc-500 hover:text-zinc-900 hover:bg-zinc-200'
                       }`}
                     >
@@ -421,7 +422,7 @@ const ExplorePage = () => {
                   disabled={currentPage === pages}
                   className="btn-secondary !px-2.5 !py-2 disabled:opacity-30"
                 >
-                  <HiChevronRight className="w-4 h-4" />
+                  <ChevronRight className="w-4 h-4" />
                 </button>
               </div>
             )}

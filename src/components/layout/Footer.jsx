@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
 import {
-  HiEnvelope,
-  HiGlobeAlt,
-} from 'react-icons/hi2';
+  Mail,
+  Globe,
+} from 'lucide-react';
 
 const Footer = () => {
   return (
@@ -54,7 +54,7 @@ const Footer = () => {
                     to={link.to}
                     className="text-sm text-zinc-500 hover:text-zinc-900 transition-colors duration-200 flex items-center gap-1.5"
                   >
-                    <HiGlobeAlt className="w-3.5 h-3.5" />
+                    <Globe className="w-3.5 h-3.5" />
                     {link.label}
                   </Link>
                 </li>
@@ -99,7 +99,7 @@ const Footer = () => {
                 type="submit"
                 className="absolute right-2 p-1.5 rounded-md bg-zinc-900 text-white hover:bg-zinc-700 transition-colors duration-200"
               >
-                <HiEnvelope className="w-3.5 h-3.5" />
+                <Mail className="w-3.5 h-3.5" />
               </button>
             </form>
           </div>

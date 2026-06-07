@@ -1,4 +1,4 @@
-import { HiCheck, HiMapPin } from 'react-icons/hi2';
+import { Check, MapPin } from 'lucide-react';
 
 const categoryColors = {
   country: 'bg-blue-50 text-blue-700 border-blue-200',
@@ -71,7 +71,7 @@ const PlaceCard = ({
           {/* Location */}
           {(place.country || place.state) && (
             <div className="flex items-center gap-1 mt-1 text-sm text-zinc-400">
-              <HiMapPin className="w-3.5 h-3.5 flex-shrink-0" />
+              <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
               <span className="truncate">
                 {[place.state, place.country].filter(Boolean).join(', ')}
               </span>
@@ -95,15 +95,30 @@ const PlaceCard = ({
 
         {/* Toggle / Completion indicator button */}
         {isParentCategory ? (
-          <div
-            title={isVisited ? 'Explored' : 'Not Explored Yet'}
-            className={`flex-shrink-0 w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-200 ${
-              isVisited
-                ? 'bg-zinc-900 text-white'
-                : 'bg-zinc-100 text-zinc-300 border border-zinc-200'
-            }`}
-          >
-            <HiCheck className="w-4 h-4" />
+          <div className="flex flex-col items-end gap-1">
+            <div
+              title={isVisited ? 'Explored' : 'Not Explored Yet'}
+              className={`w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-200 ${
+                isVisited
+                  ? 'bg-primary-600 text-white font-semibold'
+                  : (place.explorePercentage > 0)
+                  ? 'bg-primary-50 text-primary-700 border border-primary-100 font-bold'
+                  : 'bg-zinc-100 text-zinc-400 border border-zinc-200 font-bold'
+              }`}
+            >
+              {isVisited ? (
+                <Check className="w-4 h-4" />
+              ) : (
+                <span className="text-[10px]">
+                  {place.explorePercentage ?? 0}%
+                </span>
+              )}
+            </div>
+            {place.totalSubPlaces !== undefined && (
+              <span className="text-[10px] font-medium text-zinc-400 whitespace-nowrap">
+                {place.visitedSubPlaces}/{place.totalSubPlaces} places
+              </span>
+            )}
           </div>
         ) : (
           <button
@@ -118,7 +133,7 @@ const PlaceCard = ({
                 : 'bg-zinc-100 text-zinc-300 hover:bg-zinc-200 hover:text-zinc-600 border border-zinc-200'
             } ${isToggling ? 'animate-pulse' : ''}`}
           >
-            <HiCheck className="w-4 h-4" />
+            <Check className="w-4 h-4" />
           </button>
         )}
       </div>

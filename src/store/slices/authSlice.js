@@ -2,9 +2,15 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import API from '../../utils/api';
 
 // Get user from localStorage
-const userInfo = localStorage.getItem('userInfo')
-  ? JSON.parse(localStorage.getItem('userInfo'))
-  : null;
+let userInfo = null;
+try {
+  const storedUser = localStorage.getItem('userInfo');
+  if (storedUser) {
+    userInfo = JSON.parse(storedUser);
+  }
+} catch (error) {
+  localStorage.removeItem('userInfo');
+}
 
 export const registerUser = createAsyncThunk(
   'auth/register',
@@ -50,7 +56,15 @@ export const updateProfile = createAsyncThunk(
     try {
       const { data } = await API.put('/auth/profile', profileData);
       // Update localStorage with new info
-      const stored = JSON.parse(localStorage.getItem('userInfo'));
+      let stored = null;
+      try {
+        const storedStr = localStorage.getItem('userInfo');
+        if (storedStr) {
+          stored = JSON.parse(storedStr);
+        }
+      } catch (error) {
+        // If parsing fails, ignore and treat as empty
+      }
       const updated = { ...stored, ...data };
       localStorage.setItem('userInfo', JSON.stringify(updated));
       return data;

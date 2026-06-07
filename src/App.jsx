@@ -67,7 +67,7 @@ function App() {
             borderRadius: '8px',
           },
           success: {
-            iconTheme: { primary: '#09090b', secondary: '#fff' },
+            iconTheme: { primary: '#0d9488', secondary: '#fff' },
           },
           error: {
             iconTheme: { primary: '#dc2626', secondary: '#fff' },

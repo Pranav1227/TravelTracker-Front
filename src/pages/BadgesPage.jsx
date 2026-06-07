@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchBadges } from '../store/slices/badgeSlice';
 import BadgeCard from '../components/ui/BadgeCard';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
-import { HiTrophy } from 'react-icons/hi2';
+import { Trophy } from 'lucide-react';
 
 const BadgesPage = () => {
   const dispatch = useDispatch();
@@ -47,7 +47,7 @@ const BadgesPage = () => {
         <div className="card mb-8">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-lg bg-zinc-100 flex items-center justify-center">
-              <HiTrophy className="w-6 h-6 text-zinc-600" />
+              <Trophy className="w-6 h-6 text-zinc-600" />
             </div>
             <div className="flex-1">
               <h2 className="text-base font-semibold text-zinc-900">Your Collection</h2>
@@ -67,7 +67,7 @@ const BadgesPage = () => {
           <div className="mt-4">
             <div className="h-2 bg-zinc-100 rounded-full overflow-hidden">
               <div
-                className="h-full bg-zinc-900 rounded-full transition-all duration-1000"
+                className="h-full bg-gradient-to-r from-primary-600 to-accent-500 rounded-full transition-all duration-1000"
                 style={{
                   width: `${badges.length > 0 ? (earnedCount / badges.length) * 100 : 0}%`,
                 }}

@@ -4,7 +4,7 @@ import { fetchPlaces, createPlace, updatePlace, deletePlace } from '../../store/
 import Modal from '../../components/ui/Modal';
 import LoadingSpinner from '../../components/ui/LoadingSpinner';
 import toast from 'react-hot-toast';
-import { HiPlus, HiPencilSquare, HiTrash, HiMapPin } from 'react-icons/hi2';
+import { Plus, Pencil, Trash2, MapPin } from 'lucide-react';
 
 const emptyForm = { name: '', category: 'country', country: '', state: '', continent: '', description: '', imageUrl: '', latitude: 0, longitude: 0 };
 
@@ -60,7 +60,7 @@ const ManagePlaces = () => {
             <p className="text-zinc-500">{total} places total</p>
           </div>
           <button onClick={openCreate} className="btn-primary flex items-center gap-2">
-            <HiPlus className="w-4 h-4" /> Add Place
+            <Plus className="w-4 h-4" /> Add Place
           </button>
         </div>
 
@@ -89,15 +89,15 @@ const ManagePlaces = () => {
                   <tr key={p._id} className="hover:bg-zinc-50 transition-colors">
                     <td className="py-3 px-4">
                       <div className="flex items-center gap-2">
-                        <HiMapPin className="w-4 h-4 text-zinc-400 flex-shrink-0" />
+                        <MapPin className="w-4 h-4 text-zinc-400 flex-shrink-0" />
                         <span className="text-sm font-medium text-zinc-900">{p.name}</span>
                       </div>
                     </td>
                     <td className="py-3 px-4"><span className="px-2 py-0.5 text-xs rounded-md bg-zinc-100 text-zinc-600 capitalize border border-zinc-200">{p.category}</span></td>
                     <td className="py-3 px-4 text-sm text-zinc-500 hidden sm:table-cell">{p.country || '—'}</td>
                     <td className="py-3 px-4 text-right">
-                      <button onClick={() => openEdit(p)} className="p-1.5 rounded-md text-zinc-400 hover:text-zinc-900 hover:bg-zinc-100 transition-colors"><HiPencilSquare className="w-4 h-4" /></button>
-                      <button onClick={() => handleDelete(p._id)} className="p-1.5 rounded-md text-zinc-400 hover:text-red-600 hover:bg-red-50 transition-colors ml-1"><HiTrash className="w-4 h-4" /></button>
+                      <button onClick={() => openEdit(p)} className="p-1.5 rounded-md text-zinc-400 hover:text-zinc-900 hover:bg-zinc-100 transition-colors"><Pencil className="w-4 h-4" /></button>
+                      <button onClick={() => handleDelete(p._id)} className="p-1.5 rounded-md text-zinc-400 hover:text-red-600 hover:bg-red-50 transition-colors ml-1"><Trash2 className="w-4 h-4" /></button>
                     </td>
                   </tr>
                 ))}

@@ -3,12 +3,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { submitHiddenGem, fetchMyGems } from '../store/slices/hiddenGemSlice';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
 import toast from 'react-hot-toast';
-import { HiSparkles, HiMapPin, HiCamera, HiPaperAirplane, HiClock, HiCheckCircle, HiXCircle, HiChatBubbleBottomCenterText } from 'react-icons/hi2';
+import { Sparkles, MapPin, Camera, Send, Clock, CheckCircle, XCircle, MessageSquare } from 'lucide-react';
 
 const statusConfig = {
-  pending: { class: 'status-pending', icon: <HiClock className="w-3.5 h-3.5" />, label: 'Pending' },
-  approved: { class: 'status-approved', icon: <HiCheckCircle className="w-3.5 h-3.5" />, label: 'Approved' },
-  rejected: { class: 'status-rejected', icon: <HiXCircle className="w-3.5 h-3.5" />, label: 'Rejected' },
+  pending: { class: 'status-pending', icon: <Clock className="w-3.5 h-3.5" />, label: 'Pending' },
+  approved: { class: 'status-approved', icon: <CheckCircle className="w-3.5 h-3.5" />, label: 'Approved' },
+  rejected: { class: 'status-rejected', icon: <XCircle className="w-3.5 h-3.5" />, label: 'Rejected' },
 };
 
 const HiddenGemsPage = () => {
@@ -39,7 +39,7 @@ const HiddenGemsPage = () => {
             <div className="card sticky top-24">
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-9 h-9 rounded-lg bg-zinc-100 text-zinc-600 flex items-center justify-center">
-                  <HiSparkles className="w-4 h-4" />
+                  <Sparkles className="w-4 h-4" />
                 </div>
                 <h2 className="text-base font-semibold text-zinc-900">Submit a Hidden Gem</h2>
               </div>
@@ -49,20 +49,20 @@ const HiddenGemsPage = () => {
                   <input type="text" name="name" value={form.name} onChange={(e) => setForm({...form, name: e.target.value})} required placeholder="Secret Waterfall Trail" className="input-field" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-zinc-700 mb-1.5"><HiMapPin className="inline w-4 h-4 mr-1" />Location *</label>
+                  <label className="block text-sm font-medium text-zinc-700 mb-1.5"><MapPin className="inline w-4 h-4 mr-1" />Location *</label>
                   <input type="text" name="location" value={form.location} onChange={(e) => setForm({...form, location: e.target.value})} required placeholder="Bali, Indonesia" className="input-field" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-zinc-700 mb-1.5"><HiChatBubbleBottomCenterText className="inline w-4 h-4 mr-1" />Description *</label>
+                  <label className="block text-sm font-medium text-zinc-700 mb-1.5"><MessageSquare className="inline w-4 h-4 mr-1" />Description *</label>
                   <textarea name="description" value={form.description} onChange={(e) => setForm({...form, description: e.target.value})} required maxLength={1000} rows={4} placeholder="Tell us about this place..." className="input-field resize-none" />
                   <p className="text-xs text-zinc-400 mt-1 text-right">{form.description.length}/1000</p>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-zinc-700 mb-1.5"><HiCamera className="inline w-4 h-4 mr-1" />Proof Image URL</label>
+                  <label className="block text-sm font-medium text-zinc-700 mb-1.5"><Camera className="inline w-4 h-4 mr-1" />Proof Image URL</label>
                   <input type="url" name="proofImageUrl" value={form.proofImageUrl} onChange={(e) => setForm({...form, proofImageUrl: e.target.value})} placeholder="https://example.com/photo.jpg" className="input-field" />
                 </div>
                 <button type="submit" disabled={submitLoading} className="btn-primary w-full flex items-center justify-center gap-2">
-                  {submitLoading ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <HiPaperAirplane className="w-4 h-4" />}
+                  {submitLoading ? <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <Send className="w-4 h-4" />}
                   {submitLoading ? 'Submitting...' : 'Submit Hidden Gem'}
                 </button>
               </form>
@@ -72,7 +72,7 @@ const HiddenGemsPage = () => {
             <h2 className="text-base font-semibold text-zinc-900 mb-4">My Submissions ({myGems.length})</h2>
             {loading ? <LoadingSpinner text="Loading..." /> : myGems.length === 0 ? (
               <div className="card text-center py-12">
-                <HiSparkles className="w-10 h-10 text-zinc-300 mx-auto mb-4" />
+                <Sparkles className="w-10 h-10 text-zinc-300 mx-auto mb-4" />
                 <h3 className="text-base font-semibold text-zinc-500">No submissions yet</h3>
               </div>
             ) : (
@@ -84,7 +84,7 @@ const HiddenGemsPage = () => {
                       <div className="flex items-start justify-between gap-4 mb-3">
                         <div className="flex-1 min-w-0">
                           <h3 className="text-base font-semibold text-zinc-900 truncate">{gem.name}</h3>
-                          <div className="flex items-center gap-1 text-sm text-zinc-400 mt-1"><HiMapPin className="w-3.5 h-3.5" />{gem.location}</div>
+                          <div className="flex items-center gap-1 text-sm text-zinc-400 mt-1"><MapPin className="w-3.5 h-3.5" />{gem.location}</div>
                         </div>
                         <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium ${st.class}`}>{st.icon}{st.label}</span>
                       </div>

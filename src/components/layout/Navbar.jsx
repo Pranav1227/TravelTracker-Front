@@ -3,12 +3,12 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../../store/slices/authSlice';
 import {
-  HiBars3,
-  HiXMark,
-  HiArrowRightOnRectangle,
-  HiUserCircle,
-  HiShieldCheck,
-} from 'react-icons/hi2';
+  Menu,
+  X,
+  LogOut,
+  User,
+  ShieldCheck,
+} from 'lucide-react';
 
 const Navbar = ({ onAuthOpen }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -56,7 +56,7 @@ const Navbar = ({ onAuthOpen }) => {
             to={user ? '/dashboard' : '/'}
             className="flex items-center gap-2.5 group"
           >
-            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-zinc-950 text-white group-hover:bg-zinc-800 transition-colors shadow-sm">
+            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-zinc-950 text-white shadow-sm">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -101,7 +101,7 @@ const Navbar = ({ onAuthOpen }) => {
                     : 'text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50'
                 }`}
               >
-                <HiShieldCheck className="w-3.5 h-3.5" />
+                <ShieldCheck className="w-3.5 h-3.5" />
                 {link.label}
               </Link>
             ))}
@@ -131,7 +131,7 @@ const Navbar = ({ onAuthOpen }) => {
                       <p className="text-xs text-zinc-500 truncate">{user.email}</p>
                       {user.role === 'admin' && (
                         <span className="inline-flex items-center gap-1 mt-1.5 px-2 py-0.5 rounded-full bg-zinc-100 text-zinc-700 text-xs font-medium">
-                          <HiShieldCheck className="w-3 h-3" /> Admin
+                          <ShieldCheck className="w-3 h-3" /> Admin
                         </span>
                       )}
                     </div>
@@ -142,7 +142,7 @@ const Navbar = ({ onAuthOpen }) => {
                         onClick={() => setProfileOpen(false)}
                         className="flex items-center gap-2 px-4 py-2 text-sm text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900 transition-colors"
                       >
-                        <HiUserCircle className="w-4 h-4 text-zinc-400" />
+                        <User className="w-4 h-4 text-zinc-400" />
                         Profile Settings
                       </Link>
                     </div>
@@ -152,7 +152,7 @@ const Navbar = ({ onAuthOpen }) => {
                         onClick={handleLogout}
                         className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors text-left"
                       >
-                        <HiArrowRightOnRectangle className="w-4 h-4 flex-shrink-0" />
+                        <LogOut className="w-4 h-4 flex-shrink-0" />
                         Log out
                       </button>
                     </div>
@@ -182,9 +182,9 @@ const Navbar = ({ onAuthOpen }) => {
               className="md:hidden p-2 rounded-md text-zinc-500 hover:text-zinc-900 hover:bg-zinc-50 transition-colors"
             >
               {mobileOpen ? (
-                <HiXMark className="w-5 h-5" />
+                <X className="w-5 h-5" />
               ) : (
-                <HiBars3 className="w-5 h-5" />
+                <Menu className="w-5 h-5" />
               )}
             </button>
           </div>

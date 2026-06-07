@@ -5,7 +5,7 @@ import { fetchBadges } from '../../store/slices/badgeSlice';
 import Modal from '../../components/ui/Modal';
 import LoadingSpinner from '../../components/ui/LoadingSpinner';
 import toast from 'react-hot-toast';
-import { HiUsers, HiShieldCheck, HiTrophy, HiMagnifyingGlass } from 'react-icons/hi2';
+import { Users, ShieldCheck, Trophy, Search } from 'lucide-react';
 
 const ManageUsers = () => {
   const dispatch = useDispatch();
@@ -51,7 +51,7 @@ const ManageUsers = () => {
 
         {/* Search */}
         <div className="relative mb-6 max-w-md">
-          <HiMagnifyingGlass className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
           <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search users..." className="input-field !pl-10" />
         </div>
 
@@ -79,17 +79,17 @@ const ManageUsers = () => {
                     <td className="py-3 px-4 text-sm text-zinc-500 hidden sm:table-cell">{u.email}</td>
                     <td className="py-3 px-4">
                       <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium ${u.role === 'admin' ? 'bg-zinc-900 text-white' : 'bg-zinc-100 text-zinc-500 border border-zinc-200'}`}>
-                        {u.role === 'admin' && <HiShieldCheck className="w-3 h-3" />}
+                        {u.role === 'admin' && <ShieldCheck className="w-3 h-3" />}
                         {u.role}
                       </span>
                     </td>
                     <td className="py-3 px-4 text-sm text-zinc-500 hidden md:table-cell">{u.badges?.length || 0}</td>
                     <td className="py-3 px-4 text-right">
                       <button onClick={() => handleRoleChange(u._id, u.role)} className="p-1.5 rounded-md text-zinc-400 hover:text-zinc-900 hover:bg-zinc-100 transition-colors" title="Toggle role">
-                        <HiShieldCheck className="w-4 h-4" />
+                        <ShieldCheck className="w-4 h-4" />
                       </button>
                       <button onClick={() => { setBadgeModal(u._id); setSelectedBadge(''); }} className="p-1.5 rounded-md text-zinc-400 hover:text-zinc-900 hover:bg-zinc-100 transition-colors ml-1" title="Award badge">
-                        <HiTrophy className="w-4 h-4" />
+                        <Trophy className="w-4 h-4" />
                       </button>
                     </td>
                   </tr>

@@ -1,38 +1,38 @@
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import {
-  HiGlobeAmericas,
-  HiMapPin,
-  HiTrophy,
-  HiSparkles,
-  HiChartBar,
-  HiArrowRight,
-  HiCheckCircle,
-  HiUserPlus,
-  HiMap,
-} from 'react-icons/hi2';
+  Globe,
+  MapPin,
+  Trophy,
+  Sparkles,
+  BarChart2,
+  ArrowRight,
+  CheckCircle,
+  UserPlus,
+  Map,
+} from 'lucide-react';
 
 const features = [
   {
-    icon: <HiMapPin className="w-6 h-6" />,
+    icon: <MapPin className="w-6 h-6" />,
     title: 'Track Your Visits',
     description:
       'Log every country, city, state, wonder, and fort you explore. Watch your world map fill up.',
   },
   {
-    icon: <HiTrophy className="w-6 h-6" />,
+    icon: <Trophy className="w-6 h-6" />,
     title: 'Earn Badges',
     description:
       'Unlock bronze, silver, gold, platinum, and legendary badges as you explore more of the world.',
   },
   {
-    icon: <HiSparkles className="w-6 h-6" />,
+    icon: <Sparkles className="w-6 h-6" />,
     title: 'Discover Hidden Gems',
     description:
       'Submit undiscovered places and get them verified by our community admins for special rewards.',
   },
   {
-    icon: <HiChartBar className="w-6 h-6" />,
+    icon: <BarChart2 className="w-6 h-6" />,
     title: 'View Your Stats',
     description:
       "See detailed exploration statistics — how much of the world you've covered across every category.",
@@ -41,19 +41,19 @@ const features = [
 
 const steps = [
   {
-    icon: <HiUserPlus className="w-7 h-7" />,
+    icon: <UserPlus className="w-7 h-7" />,
     title: 'Create Account',
     description: 'Sign up in seconds and set up your explorer profile.',
     number: '01',
   },
   {
-    icon: <HiMap className="w-7 h-7" />,
+    icon: <Map className="w-7 h-7" />,
     title: 'Log Your Visits',
     description: "Browse places and check off the ones you've visited.",
     number: '02',
   },
   {
-    icon: <HiTrophy className="w-7 h-7" />,
+    icon: <Trophy className="w-7 h-7" />,
     title: 'Earn Rewards',
     description: 'Unlock badges and climb the explorer leaderboard.',
     number: '03',
@@ -89,14 +89,14 @@ const LandingPage = ({ onAuthOpen }) => {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 text-center pt-24">
           {/* Badge */}
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-zinc-100 border border-zinc-200 text-zinc-700 text-sm font-medium mb-8 animate-fade-in">
-            <HiGlobeAmericas className="w-4 h-4" />
+            <Globe className="w-4 h-4" />
             Your Personal Travel Explorer
           </div>
 
           {/* Headline */}
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black text-zinc-900 leading-tight mb-6 animate-slide-up tracking-tight">
             Track Your World{' '}
-            <span className="text-zinc-400">Adventures</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-accent-500">Adventures</span>
           </h1>
 
           {/* Subtitle */}
@@ -109,7 +109,7 @@ const LandingPage = ({ onAuthOpen }) => {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 animate-slide-up" style={{ animationDelay: '0.2s' }}>
             <button onClick={handleGetStarted} className="btn-primary text-base !px-8 !py-3.5 flex items-center gap-2">
               Get Started Free
-              <HiArrowRight className="w-5 h-5" />
+              <ArrowRight className="w-5 h-5" />
             </button>
             <button
               onClick={() => {
@@ -130,7 +130,7 @@ const LandingPage = ({ onAuthOpen }) => {
                 className="card text-center hover:border-zinc-300 transition-colors"
               >
                 <span className="text-xl block mb-1">{stat.icon}</span>
-                <div className="text-xl font-bold text-zinc-900">{stat.value}</div>
+                <div className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-accent-500">{stat.value}</div>
                 <div className="text-xs text-zinc-400">{stat.label}</div>
               </div>
             ))}
@@ -156,7 +156,7 @@ const LandingPage = ({ onAuthOpen }) => {
               >
                 <div className="flex items-start gap-4">
                   <div
-                    className="flex-shrink-0 w-10 h-10 rounded-lg bg-zinc-100 text-zinc-600 flex items-center justify-center"
+                    className="flex-shrink-0 w-10 h-10 rounded-lg bg-primary-50 text-primary-600 flex items-center justify-center"
                   >
                     {feature.icon}
                   </div>
@@ -194,7 +194,7 @@ const LandingPage = ({ onAuthOpen }) => {
                     {step.number}
                   </div>
                   {/* Icon */}
-                  <div className="w-12 h-12 mx-auto rounded-lg bg-zinc-100 text-zinc-600 flex items-center justify-center mb-4">
+                  <div className="w-12 h-12 mx-auto rounded-lg bg-primary-50 text-primary-600 flex items-center justify-center mb-4">
                     {step.icon}
                   </div>
                   <h3 className="text-base font-semibold text-zinc-900 mb-2">{step.title}</h3>
@@ -210,7 +210,7 @@ const LandingPage = ({ onAuthOpen }) => {
       <section className="py-24 relative">
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 text-center">
           <div className="card !p-12 border-zinc-200">
-            <HiGlobeAmericas className="w-10 h-10 text-zinc-400 mx-auto mb-6" />
+            <Globe className="w-10 h-10 text-primary-500 mx-auto mb-6" />
             <h2 className="text-2xl sm:text-3xl font-bold text-zinc-900 mb-4 tracking-tight">
               Ready to Start Exploring?
             </h2>
@@ -223,7 +223,7 @@ const LandingPage = ({ onAuthOpen }) => {
                 onClick={handleGetStarted}
                 className="btn-primary text-base !px-8 !py-3.5 flex items-center gap-2"
               >
-                <HiCheckCircle className="w-5 h-5" />
+                <CheckCircle className="w-5 h-5" />
                 Create Free Account
               </button>
             </div>

@@ -4,7 +4,7 @@ import { fetchAllGems, verifyGem } from '../../store/slices/hiddenGemSlice';
 import { fetchBadges } from '../../store/slices/badgeSlice';
 import LoadingSpinner from '../../components/ui/LoadingSpinner';
 import toast from 'react-hot-toast';
-import { HiSparkles, HiCheckCircle, HiXCircle, HiClock, HiMapPin } from 'react-icons/hi2';
+import { Sparkles, CheckCircle, XCircle, Clock, MapPin } from 'lucide-react';
 
 const ReviewGems = () => {
   const dispatch = useDispatch();
@@ -36,9 +36,9 @@ const ReviewGems = () => {
         <div className="flex gap-1.5 mb-6">
           {['pending', 'approved', 'rejected'].map((st) => (
             <button key={st} onClick={() => setStatusFilter(st)} className={`px-3 py-1.5 rounded-md text-sm font-medium capitalize transition-all duration-200 flex items-center gap-1 ${statusFilter === st ? 'bg-zinc-900 text-white' : 'bg-zinc-100 text-zinc-500 hover:text-zinc-900 hover:bg-zinc-200'}`}>
-              {st === 'pending' && <HiClock className="w-3.5 h-3.5" />}
-              {st === 'approved' && <HiCheckCircle className="w-3.5 h-3.5" />}
-              {st === 'rejected' && <HiXCircle className="w-3.5 h-3.5" />}
+              {st === 'pending' && <Clock className="w-3.5 h-3.5" />}
+              {st === 'approved' && <CheckCircle className="w-3.5 h-3.5" />}
+              {st === 'rejected' && <XCircle className="w-3.5 h-3.5" />}
               {st}
             </button>
           ))}
@@ -46,7 +46,7 @@ const ReviewGems = () => {
 
         {loading ? <LoadingSpinner /> : allGems.length === 0 ? (
           <div className="card text-center py-12">
-            <HiSparkles className="w-10 h-10 text-zinc-300 mx-auto mb-4" />
+            <Sparkles className="w-10 h-10 text-zinc-300 mx-auto mb-4" />
             <h3 className="text-base font-semibold text-zinc-500">No {statusFilter} gems</h3>
           </div>
         ) : (
@@ -56,7 +56,7 @@ const ReviewGems = () => {
                 <div className="flex items-start justify-between gap-4 mb-3">
                   <div className="flex-1 min-w-0">
                     <h3 className="text-base font-semibold text-zinc-900">{gem.name}</h3>
-                    <div className="flex items-center gap-1 text-sm text-zinc-400 mt-1"><HiMapPin className="w-3.5 h-3.5" />{gem.location}</div>
+                    <div className="flex items-center gap-1 text-sm text-zinc-400 mt-1"><MapPin className="w-3.5 h-3.5" />{gem.location}</div>
                     <div className="text-xs text-zinc-400 mt-1">By: {gem.submittedBy?.name} ({gem.submittedBy?.email})</div>
                   </div>
                 </div>
@@ -79,10 +79,10 @@ const ReviewGems = () => {
                     </div>
                     <div className="flex gap-2">
                       <button onClick={() => handleVerify(gem._id, 'approved')} disabled={verifyLoading === gem._id} className="btn-primary flex-1 flex items-center justify-center gap-2 !py-2.5 text-sm">
-                        <HiCheckCircle className="w-4 h-4" /> Approve
+                        <CheckCircle className="w-4 h-4" /> Approve
                       </button>
                       <button onClick={() => handleVerify(gem._id, 'rejected')} disabled={verifyLoading === gem._id} className="btn-danger flex-1 flex items-center justify-center gap-2 !py-2.5 text-sm">
-                        <HiXCircle className="w-4 h-4" /> Reject
+                        <XCircle className="w-4 h-4" /> Reject
                       </button>
                     </div>
                   </div>

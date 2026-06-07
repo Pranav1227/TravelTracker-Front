@@ -5,14 +5,14 @@ import { fetchExplorationStats } from '../store/slices/visitSlice';
 import StatCard from '../components/ui/StatCard';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
 import {
-  HiMapPin,
-  HiTrophy,
-  HiSparkles,
-  HiArrowRight,
-  HiCheckBadge,
-  HiCalendarDays,
-  HiGlobeAmericas,
-} from 'react-icons/hi2';
+  MapPin,
+  Trophy,
+  Sparkles,
+  ArrowRight,
+  BadgeCheck,
+  CalendarDays,
+  Globe,
+} from 'lucide-react';
 
 const categoryInfo = {
   country: { icon: '🌍', label: 'Countries' },
@@ -71,7 +71,7 @@ const DashboardPage = () => {
         {/* Getting Started Guide */}
         <div className="card mb-8 bg-zinc-50/50">
           <h3 className="text-sm font-semibold text-zinc-900 flex items-center gap-2 mb-4">
-            <HiGlobeAmericas className="w-4 h-4 text-zinc-700" /> Getting Started Guide
+            <Globe className="w-4 h-4 text-zinc-700" /> Getting Started Guide
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="space-y-1.5">
@@ -122,7 +122,7 @@ const DashboardPage = () => {
                   </div>
                   <div className="h-2 bg-zinc-100 rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-zinc-900 rounded-full transition-all duration-1000 ease-out"
+                      className="h-full bg-gradient-to-r from-primary-600 to-accent-500 rounded-full transition-all duration-1000 ease-out"
                       style={{ width: `${stats.overall.percentage}%` }}
                     />
                   </div>
@@ -160,10 +160,10 @@ const DashboardPage = () => {
           <div className="card lg:col-span-2">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-sm font-semibold text-zinc-900 flex items-center gap-2">
-                <HiCheckBadge className="w-4 h-4 text-zinc-400" /> Recent Achievements
+                <BadgeCheck className="w-4 h-4 text-zinc-400" /> Recent Achievements
               </h3>
               <Link to="/badges" className="text-xs font-medium text-zinc-500 hover:text-zinc-900 flex items-center gap-0.5 transition-colors">
-                All Badges <HiArrowRight className="w-3 h-3" />
+                All Badges <ArrowRight className="w-3 h-3" />
               </Link>
             </div>
 
@@ -195,7 +195,7 @@ const DashboardPage = () => {
           {/* Profile Summary */}
           <div className="card">
             <h3 className="text-sm font-semibold text-zinc-900 flex items-center gap-2 mb-4">
-              <HiCalendarDays className="w-4 h-4 text-zinc-400" /> Summary
+              <CalendarDays className="w-4 h-4 text-zinc-400" /> Summary
             </h3>
             <div className="space-y-0">
               <div className="flex justify-between items-center text-sm py-3">
@@ -226,14 +226,14 @@ const DashboardPage = () => {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-lg bg-zinc-100 text-zinc-600 flex items-center justify-center">
-                  <HiMapPin className="w-4 h-4" />
+                  <MapPin className="w-4 h-4" />
                 </div>
                 <div>
                   <h3 className="font-medium text-zinc-900 text-sm">Explore Places</h3>
                   <p className="text-xs text-zinc-400">Browse & log visits</p>
                 </div>
               </div>
-              <HiArrowRight className="w-4 h-4 text-zinc-300 group-hover:text-zinc-500 group-hover:translate-x-0.5 transition-all" />
+              <ArrowRight className="w-4 h-4 text-zinc-300 group-hover:text-zinc-500 group-hover:translate-x-0.5 transition-all" />
             </div>
           </Link>
 
@@ -244,7 +244,7 @@ const DashboardPage = () => {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-lg bg-zinc-100 text-zinc-600 flex items-center justify-center">
-                  <HiTrophy className="w-4 h-4" />
+                  <Trophy className="w-4 h-4" />
                 </div>
                 <div>
                   <h3 className="font-medium text-zinc-900 text-sm">Your Badges</h3>
@@ -253,7 +253,7 @@ const DashboardPage = () => {
                   </p>
                 </div>
               </div>
-              <HiArrowRight className="w-4 h-4 text-zinc-300 group-hover:text-zinc-500 group-hover:translate-x-0.5 transition-all" />
+              <ArrowRight className="w-4 h-4 text-zinc-300 group-hover:text-zinc-500 group-hover:translate-x-0.5 transition-all" />
             </div>
           </Link>
 
@@ -264,14 +264,14 @@ const DashboardPage = () => {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-lg bg-zinc-100 text-zinc-600 flex items-center justify-center">
-                  <HiSparkles className="w-4 h-4" />
+                  <Sparkles className="w-4 h-4" />
                 </div>
                 <div>
                   <h3 className="font-medium text-zinc-900 text-sm">Hidden Gems</h3>
                   <p className="text-xs text-zinc-400">Submit discoveries</p>
                 </div>
               </div>
-              <HiArrowRight className="w-4 h-4 text-zinc-300 group-hover:text-zinc-500 group-hover:translate-x-0.5 transition-all" />
+              <ArrowRight className="w-4 h-4 text-zinc-300 group-hover:text-zinc-500 group-hover:translate-x-0.5 transition-all" />
             </div>
           </Link>
         </div>

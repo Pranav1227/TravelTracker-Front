@@ -4,18 +4,20 @@
 
 :root {
   --bg-primary: #ffffff;
-  --bg-secondary: #fafafa;
+  --bg-secondary: #f8fafc;
   --input-bg: #ffffff;
   --btn-sec-bg: #ffffff;
-  --scroll-thumb: #d4d4d8;
-  --text-primary: #09090b;
-  --text-secondary: #71717a;
-  --border-color: #e4e4e7;
-  --border-hover: #a1a1aa;
-  --ring-color: #18181b;
-  --muted-bg: #f4f4f5;
+  --scroll-thumb: #cbd5e1;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --border-color: #e2e8f0;
+  --border-hover: #cbd5e1;
+  --ring-color: #4f46e5;
+  --muted-bg: #f1f5f9;
   --card-bg: #ffffff;
-  --accent: #18181b;
+  --accent: #4f46e5;
+  --accent-hover: #4338ca;
+  --brand-gradient: linear-gradient(135deg, #4f46e5 0%, #10b981 100%);
 }
 
 @layer base {
@@ -32,12 +34,16 @@
   }
 
   body {
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
     background-color: var(--bg-primary);
     color: var(--text-primary);
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6, .font-display {
+    font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif;
   }
 
   ::-webkit-scrollbar {
@@ -75,11 +81,11 @@
     @apply px-6 py-3 font-semibold rounded-lg
            transition-all duration-200
            active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100;
-    background-color: #09090b;
+    background-color: #0f172a;
     color: #ffffff;
   }
   .btn-primary:hover {
-    background-color: #27272a;
+    background-color: #1e293b;
   }
 
   .btn-secondary {
@@ -119,11 +125,11 @@
     background-color: var(--input-bg);
     border: 1px solid var(--border-color);
     color: var(--text-primary);
-    --tw-ring-color: #a1a1aa;
+    --tw-ring-color: #cbd5e1;
   }
   .input-field:focus {
-    border-color: var(--ring-color);
-    --tw-ring-color: rgba(24, 24, 27, 0.15);
+    border-color: var(--accent);
+    --tw-ring-color: rgba(13, 148, 136, 0.15);
   }
   .input-field::placeholder {
     color: var(--text-secondary);
@@ -131,9 +137,14 @@
   }
 
   .card {
-    @apply rounded-xl p-6 animate-fade-in;
+    @apply rounded-xl p-6 animate-fade-in transition-all duration-300;
     background-color: var(--card-bg);
     border: 1px solid var(--border-color);
+  }
+  .card:hover {
+    border-color: var(--border-hover);
+    box-shadow: 0 12px 30px -10px rgba(79, 70, 229, 0.08), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+    transform: translateY(-2px);
   }
 
   .section-title {

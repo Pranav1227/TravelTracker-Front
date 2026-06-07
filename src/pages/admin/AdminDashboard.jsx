@@ -3,14 +3,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { fetchDashboardStats } from '../../store/slices/adminSlice';
 import LoadingSpinner from '../../components/ui/LoadingSpinner';
-import { HiUsers, HiMapPin, HiEye, HiSparkles, HiTrophy, HiArrowRight } from 'react-icons/hi2';
+import { Users, MapPin, Eye, Sparkles, Trophy, ArrowRight } from 'lucide-react';
 
 const statCards = [
-  { key: 'totalUsers', label: 'Total Users', icon: <HiUsers className="w-5 h-5" /> },
-  { key: 'totalPlaces', label: 'Total Places', icon: <HiMapPin className="w-5 h-5" /> },
-  { key: 'totalVisits', label: 'Total Visits', icon: <HiEye className="w-5 h-5" /> },
-  { key: 'pendingGems', label: 'Pending Gems', icon: <HiSparkles className="w-5 h-5" /> },
-  { key: 'totalBadges', label: 'Total Badges', icon: <HiTrophy className="w-5 h-5" /> },
+  { key: 'totalUsers', label: 'Total Users', icon: <Users className="w-5 h-5" /> },
+  { key: 'totalPlaces', label: 'Total Places', icon: <MapPin className="w-5 h-5" /> },
+  { key: 'totalVisits', label: 'Total Visits', icon: <Eye className="w-5 h-5" /> },
+  { key: 'pendingGems', label: 'Pending Gems', icon: <Sparkles className="w-5 h-5" /> },
+  { key: 'totalBadges', label: 'Total Badges', icon: <Trophy className="w-5 h-5" /> },
 ];
 
 const AdminDashboard = () => {
@@ -43,9 +43,9 @@ const AdminDashboard = () => {
         {/* Quick Links */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-8">
           {[
-            { to: '/admin/places', label: 'Manage Places', desc: 'Add, edit, delete', icon: <HiMapPin className="w-4 h-4" /> },
-            { to: '/admin/gems', label: 'Review Gems', desc: `${dashboardStats.pendingGems} pending`, icon: <HiSparkles className="w-4 h-4" /> },
-            { to: '/admin/users', label: 'Manage Users', desc: `${dashboardStats.totalUsers} users`, icon: <HiUsers className="w-4 h-4" /> },
+            { to: '/admin/places', label: 'Manage Places', desc: 'Add, edit, delete', icon: <MapPin className="w-4 h-4" /> },
+            { to: '/admin/gems', label: 'Review Gems', desc: `${dashboardStats.pendingGems} pending`, icon: <Sparkles className="w-4 h-4" /> },
+            { to: '/admin/users', label: 'Manage Users', desc: `${dashboardStats.totalUsers} users`, icon: <Users className="w-4 h-4" /> },
           ].map((link) => (
             <Link key={link.to} to={link.to} className="card group hover:border-zinc-300 transition-all duration-200">
               <div className="flex items-center justify-between">
@@ -56,7 +56,7 @@ const AdminDashboard = () => {
                     <p className="text-xs text-zinc-400">{link.desc}</p>
                   </div>
                 </div>
-                <HiArrowRight className="w-4 h-4 text-zinc-300 group-hover:text-zinc-500 group-hover:translate-x-0.5 transition-all" />
+                <ArrowRight className="w-4 h-4 text-zinc-300 group-hover:text-zinc-500 group-hover:translate-x-0.5 transition-all" />
               </div>
             </Link>
           ))}

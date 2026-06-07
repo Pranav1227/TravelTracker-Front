@@ -4,7 +4,7 @@ import { getProfile, updateProfile } from '../store/slices/authSlice';
 import { fetchExplorationStats } from '../store/slices/visitSlice';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
 import toast from 'react-hot-toast';
-import { HiUserCircle, HiPencilSquare, HiCalendarDays, HiEnvelope, HiShieldCheck } from 'react-icons/hi2';
+import { User, Pencil, CalendarDays, Mail, ShieldCheck } from 'lucide-react';
 
 const ProfilePage = () => {
   const dispatch = useDispatch();
@@ -49,17 +49,17 @@ const ProfilePage = () => {
                 <h2 className="text-xl font-bold text-zinc-900">{user.name}</h2>
                 {user.role === 'admin' && (
                   <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-zinc-100 text-zinc-700 text-xs font-medium">
-                    <HiShieldCheck className="w-3 h-3" /> Admin
+                    <ShieldCheck className="w-3 h-3" /> Admin
                   </span>
                 )}
               </div>
               <div className="flex flex-col sm:flex-row items-center gap-3 mt-2 text-sm text-zinc-500">
-                <span className="flex items-center gap-1"><HiEnvelope className="w-4 h-4" />{user.email}</span>
-                {user.createdAt && <span className="flex items-center gap-1"><HiCalendarDays className="w-4 h-4" />Joined {new Date(user.createdAt).toLocaleDateString()}</span>}
+                <span className="flex items-center gap-1"><Mail className="w-4 h-4" />{user.email}</span>
+                {user.createdAt && <span className="flex items-center gap-1"><CalendarDays className="w-4 h-4" />Joined {new Date(user.createdAt).toLocaleDateString()}</span>}
               </div>
             </div>
             <button onClick={() => setEditing(!editing)} className="btn-secondary !px-4 !py-2 flex items-center gap-2 text-sm">
-              <HiPencilSquare className="w-4 h-4" />
+              <Pencil className="w-4 h-4" />
               {editing ? 'Cancel' : 'Edit'}
             </button>
           </div>

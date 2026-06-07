@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser, registerUser, clearError } from '../../store/slices/authSlice';
-import { HiXMark, HiEye, HiEyeSlash, HiGlobeAmericas } from 'react-icons/hi2';
+import { X, Eye, EyeOff, Globe } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const AuthModal = ({ isOpen, onClose, initialTab = 'login' }) => {
@@ -94,13 +94,13 @@ const AuthModal = ({ isOpen, onClose, initialTab = 'login' }) => {
           onClick={onClose}
           className="absolute top-4 right-4 z-10 p-1.5 rounded-md text-zinc-400 hover:text-zinc-900 hover:bg-zinc-100 transition-colors"
         >
-          <HiXMark className="w-5 h-5" />
+          <X className="w-5 h-5" />
         </button>
 
         {/* Header */}
         <div className="px-8 pt-8 pb-4 text-center">
           <div className="flex items-center justify-center gap-2 mb-2">
-            <HiGlobeAmericas className="w-7 h-7 text-zinc-900" />
+            <Globe className="w-7 h-7 text-zinc-900" />
           </div>
           <h2 className="text-xl font-bold text-zinc-900">
             {activeTab === 'login' ? 'Welcome Back' : 'Join the Adventure'}
@@ -196,9 +196,9 @@ const AuthModal = ({ isOpen, onClose, initialTab = 'login' }) => {
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-700 transition-colors"
               >
                 {showPassword ? (
-                  <HiEyeSlash className="w-5 h-5" />
+                  <EyeOff className="w-5 h-5" />
                 ) : (
-                  <HiEye className="w-5 h-5" />
+                  <Eye className="w-5 h-5" />
                 )}
               </button>
             </div>

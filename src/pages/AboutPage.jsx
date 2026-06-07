@@ -1,22 +1,30 @@
-import { HiGlobeAmericas, HiMapPin, HiTrophy, HiSparkles, HiShieldCheck } from 'react-icons/hi2';
+import { Globe, MapPin, Trophy, Sparkles, ShieldCheck } from 'lucide-react';
 
 const AboutPage = () => {
   const steps = [
     {
-      icon: <HiMapPin className="w-5 h-5" />,
+      icon: <MapPin className="w-5 h-5" />,
       title: "1. Log Your Adventures",
       desc: "Mark off countries, cities, states, historic forts, and the 7 Wonders of the World that you have explored.",
     },
     {
-      icon: <HiTrophy className="w-5 h-5" />,
+      icon: <Trophy className="w-5 h-5" />,
       title: "2. Unlock Achievements",
       desc: "Climb through 5 badge tiers (Bronze to Legendary) as you expand your footprint across the globe.",
     },
     {
-      icon: <HiSparkles className="w-5 h-5" />,
+      icon: <Sparkles className="w-5 h-5" />,
       title: "3. Share Hidden Gems",
       desc: "Discover local secrets and upload them. Earn recognition when admins verify your gem submissions.",
     },
+  ];
+
+  const stats = [
+    { icon: <Globe className="w-5 h-5" />, value: '190+', label: 'Countries Tracked' },
+    { icon: <MapPin className="w-5 h-5" />, value: '10,000+', label: 'Cities & Places' },
+    { icon: <Trophy className="w-5 h-5" />, value: '50+', label: 'Exploration Badges' },
+    { icon: <Sparkles className="w-5 h-5" />, value: '1,500+', label: 'Hidden Gems' },
+    { icon: <ShieldCheck className="w-5 h-5" />, value: '100% Verified', label: 'By Admins' },
   ];
 
   return (
@@ -52,7 +60,7 @@ const AboutPage = () => {
         <div className="py-12 grid grid-cols-1 md:grid-cols-2 gap-8 border-b border-zinc-100">
           <div>
             <h2 className="text-lg font-semibold text-zinc-900 mb-3 flex items-center gap-2">
-              <HiGlobeAmericas className="w-5 h-5 text-zinc-700" /> Our Mission
+              <Globe className="w-5 h-5 text-zinc-700" /> Our Mission
             </h2>
             <p className="text-sm text-zinc-500 leading-relaxed">
               We believe that exploration changes perspective. Our mission is to encourage conscious global and local travel by gamifying the experience and building a community-driven database of authentic, verified spots.
@@ -60,7 +68,7 @@ const AboutPage = () => {
           </div>
           <div>
             <h2 className="text-lg font-semibold text-zinc-900 mb-3 flex items-center gap-2">
-              <HiShieldCheck className="w-5 h-5 text-zinc-700" /> Community Built
+              <ShieldCheck className="w-5 h-5 text-zinc-700" /> Community Built
             </h2>
             <p className="text-sm text-zinc-500 leading-relaxed">
               TravelTracker is built for travelers, by travelers. Every hidden gem is crowdsourced from the community and vetted by local moderators to maintain high quality recommendations and information.

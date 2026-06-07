@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import { HiEnvelope, HiMapPin, HiPhone, HiChatBubbleLeftRight } from 'react-icons/hi2';
+import { Mail, MapPin, Phone, MessagesSquare } from 'lucide-react';
 
 const ContactPage = () => {
   const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
@@ -38,7 +38,7 @@ const ContactPage = () => {
             <div className="card h-full flex flex-col justify-between">
               <div>
                 <h3 className="text-base font-semibold text-zinc-900 mb-4 flex items-center gap-2">
-                  <HiChatBubbleLeftRight className="w-5 h-5 text-zinc-700" /> Connect
+                  <MessagesSquare className="w-5 h-5 text-zinc-700" /> Connect
                 </h3>
                 <p className="text-xs text-zinc-500 leading-relaxed mb-6">
                   Feel free to reach out directly through any of these channels or submit the form.
@@ -46,7 +46,7 @@ const ContactPage = () => {
                 <div className="space-y-4">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-lg bg-zinc-50 border border-zinc-150 flex items-center justify-center text-zinc-600">
-                      <HiEnvelope className="w-4 h-4" />
+                      <Mail className="w-4 h-4" />
                     </div>
                     <div>
                       <p className="text-xs text-zinc-400">Email us</p>
@@ -55,7 +55,7 @@ const ContactPage = () => {
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-lg bg-zinc-50 border border-zinc-150 flex items-center justify-center text-zinc-600">
-                      <HiPhone className="w-4 h-4" />
+                      <Phone className="w-4 h-4" />
                     </div>
                     <div>
                       <p className="text-xs text-zinc-400">Call us</p>
@@ -64,7 +64,7 @@ const ContactPage = () => {
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-lg bg-zinc-50 border border-zinc-150 flex items-center justify-center text-zinc-600">
-                      <HiMapPin className="w-4 h-4" />
+                      <MapPin className="w-4 h-4" />
                     </div>
                     <div>
                       <p className="text-xs text-zinc-400">Headquarters</p>
