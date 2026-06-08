@@ -7,6 +7,7 @@ import { getProfile } from './store/slices/authSlice';
 // Layout
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
+import SidebarLayout from './components/layout/SidebarLayout';
 import { ProtectedRoute, AdminRoute } from './components/layout/ProtectedRoute';
 import AuthModal from './components/auth/AuthModal';
 
@@ -17,6 +18,7 @@ import ExplorePage from './pages/ExplorePage';
 import BadgesPage from './pages/BadgesPage';
 import HiddenGemsPage from './pages/HiddenGemsPage';
 import ProfilePage from './pages/ProfilePage';
+import NotificationPage from './pages/NotificationPage';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -54,8 +56,11 @@ function App() {
     setAuthOpen(true);
   };
 
+  // Determine if the current route is public (uses top navbar) or protected (uses sidebar)
+  const isPublicRoute = ['/', '/about', '/contact'].includes(location.pathname);
+
   return (
-    <div className="min-h-screen bg-white text-zinc-900 flex flex-col">
+    <>
       <Toaster
         position="top-right"
         toastOptions={{
@@ -75,52 +80,47 @@ function App() {
         }}
       />
 
-      <Navbar onAuthOpen={handleAuthOpen} />
-
       <AuthModal
         isOpen={authOpen}
         onClose={() => setAuthOpen(false)}
         initialTab={authTab}
       />
 
-      <main className="flex-1">
+      {isPublicRoute ? (
+        <div className="min-h-screen bg-white text-zinc-900 flex flex-col">
+          <Navbar onAuthOpen={handleAuthOpen} />
+          <main className="flex-1 pt-14">
+            <Routes>
+              <Route path="/" element={user ? <Navigate to="/dashboard" replace /> : <LandingPage onAuthOpen={handleAuthOpen} />} />
+              <Route path="/about" element={<AboutPage />} />
+              <Route path="/contact" element={<ContactPage />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </main>
+          <Footer />
+        </div>
+      ) : (
         <Routes>
-          {/* Public */}
-          <Route
-            path="/"
-            element={
-              user ? (
-                <Navigate to="/dashboard" replace />
-              ) : (
-                <LandingPage onAuthOpen={handleAuthOpen} />
-              )
-            }
-          />
-
-          {/* Public Pages */}
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/contact" element={<ContactPage />} />
-
-          {/* Protected User Routes */}
-          <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
-          <Route path="/explore" element={<ProtectedRoute><ExplorePage /></ProtectedRoute>} />
-          <Route path="/badges" element={<ProtectedRoute><BadgesPage /></ProtectedRoute>} />
-          <Route path="/hidden-gems" element={<ProtectedRoute><HiddenGemsPage /></ProtectedRoute>} />
-          <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
-
-          {/* Admin Routes */}
-          <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
-          <Route path="/admin/places" element={<AdminRoute><ManagePlaces /></AdminRoute>} />
-          <Route path="/admin/gems" element={<AdminRoute><ReviewGems /></AdminRoute>} />
-          <Route path="/admin/users" element={<AdminRoute><ManageUsers /></AdminRoute>} />
-
-          {/* Fallback */}
+          {/* Protected Routes wrapped in Sidebar Layout */}
+          <Route element={<SidebarLayout />}>
+            <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+            <Route path="/explore" element={<ProtectedRoute><ExplorePage /></ProtectedRoute>} />
+            <Route path="/badges" element={<ProtectedRoute><BadgesPage /></ProtectedRoute>} />
+            <Route path="/hidden-gems" element={<ProtectedRoute><HiddenGemsPage /></ProtectedRoute>} />
+            <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+            <Route path="/notifications" element={<ProtectedRoute><NotificationPage /></ProtectedRoute>} />
+            
+            {/* Admin Routes */}
+            <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+            <Route path="/admin/places" element={<AdminRoute><ManagePlaces /></AdminRoute>} />
+            <Route path="/admin/gems" element={<AdminRoute><ReviewGems /></AdminRoute>} />
+            <Route path="/admin/users" element={<AdminRoute><ManageUsers /></AdminRoute>} />
+          </Route>
+          
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
-      </main>
-
-      <Footer />
-    </div>
+      )}
+    </>
   );
 }
 

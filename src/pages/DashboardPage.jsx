@@ -1,279 +1,215 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { fetchExplorationStats } from '../store/slices/visitSlice';
-import StatCard from '../components/ui/StatCard';
+import { fetchExplorationStats, fetchMyVisits } from '../store/slices/visitSlice';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
-import {
-  MapPin,
-  Trophy,
-  Sparkles,
-  ArrowRight,
-  BadgeCheck,
-  CalendarDays,
-  Globe,
-} from 'lucide-react';
+import { MapPin, LayoutGrid, List } from 'lucide-react';
 
-const categoryInfo = {
-  country: { icon: '🌍', label: 'Countries' },
-  state: { icon: '🏛️', label: 'States' },
-  city: { icon: '🏙️', label: 'Cities' },
-  wonder: { icon: '✨', label: 'Wonders' },
-  fort: { icon: '🏰', label: 'Forts' },
+const ProgressRing = ({ percentage = 0, size = 96, strokeWidth = 8, color = '#18181b', trackColor = '#f4f4f5' }) => {
+  const radius = (size - strokeWidth) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const targetOffset = circumference - (percentage / 100) * circumference;
+  const [offset, setOffset] = useState(circumference);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setOffset(targetOffset);
+    }, 150);
+    return () => clearTimeout(timer);
+  }, [targetOffset]);
+
+  return (
+    <div className="relative flex flex-col items-center justify-center">
+      <div className="relative">
+        <svg width={size} height={size} className="transform -rotate-90">
+          <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke={trackColor} strokeWidth={strokeWidth} />
+          <circle
+            cx={size / 2}
+            cy={size / 2}
+            r={radius}
+            fill="none"
+            stroke={color}
+            strokeWidth={strokeWidth}
+            strokeLinecap="round"
+            strokeDasharray={circumference}
+            strokeDashoffset={offset}
+            className="transition-all duration-1000 ease-out"
+          />
+        </svg>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <span className="text-xl font-bold text-zinc-900">{percentage}%</span>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 const DashboardPage = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
-  const { stats, statsLoading } = useSelector((state) => state.visits);
+  const { stats, statsLoading, visits, loading: visitsLoading } = useSelector((state) => state.visits);
 
   useEffect(() => {
     dispatch(fetchExplorationStats());
+    dispatch(fetchMyVisits());
   }, [dispatch]);
 
-  const getGreeting = () => {
-    const hour = new Date().getHours();
-    if (hour < 12) return 'Good Morning';
-    if (hour < 17) return 'Good Afternoon';
-    return 'Good Evening';
-  };
+  const sortedVisits = visits ? [...visits].sort((a, b) => new Date(b.visitedAt) - new Date(a.visitedAt)) : [];
+  const recentVisits = sortedVisits.slice(0, 5);
+  const recentBadges = user?.badges?.slice(-2).reverse() || [];
 
-  const getExplorerRank = (totalVisits) => {
-    if (!totalVisits || totalVisits === 0) return { title: 'Novice Explorer', desc: 'Log your first visit to start your journey.' };
-    if (totalVisits < 3) return { title: 'Wayfinder', desc: 'You are discovering local treasures.' };
-    if (totalVisits < 8) return { title: 'Globe Trekker', desc: 'An experienced explorer with a passion for travel.' };
-    return { title: 'Legendary Pathfinder', desc: 'A master world conqueror.' };
-  };
+  if (statsLoading || visitsLoading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <LoadingSpinner text="Loading dashboard data..." />
+      </div>
+    );
+  }
 
-  const rank = getExplorerRank(stats?.overall?.visited);
+  // Ring data mapping based on design
+  const rings = [
+    { label: 'WORLD', percentage: stats?.overall?.percentage || 0, color: '#A0AEC0' },
+    { label: 'COUNTRIES', percentage: stats?.country?.percentage || 0, color: '#2F855A' },
+    { label: 'STATES', percentage: stats?.state?.percentage || 0, color: '#ED8936' },
+    { label: 'CITIES', percentage: stats?.city?.percentage || 0, color: '#1A365D' },
+  ];
 
   return (
-    <div className="min-h-screen pt-20 pb-12 bg-white">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6">
-        {/* Welcome Header */}
-        <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-zinc-900 tracking-tight">
-              {getGreeting()}, {user?.name?.split(' ')[0]}
-            </h1>
-            <p className="text-zinc-500 text-sm mt-1">
-              Track your exploration progress, collect achievements, and explore the world.
-            </p>
-          </div>
-          <Link
-            to="/about"
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-zinc-50 border border-zinc-200 text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100 text-xs font-semibold transition-all self-start sm:self-center"
-          >
-            How It Works & FAQ →
-          </Link>
+    <div className="w-full pb-12 animate-fade-in">
+      {/* Header Row */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-[#1A365D]">Welcome back, Explorer!</h1>
+          <p className="text-zinc-500 mt-1">Your journey map is looking dense today.</p>
         </div>
+        <Link 
+          to="/explore" 
+          className="flex items-center gap-2 bg-[#1A365D] hover:bg-[#112440] text-white px-5 py-2.5 rounded-lg font-semibold transition-colors self-start sm:self-auto shadow-sm"
+        >
+          <MapPin className="w-4 h-4" /> Log New Visit
+        </Link>
+      </div>
 
-        {/* Getting Started Guide */}
-        <div className="card mb-8 bg-zinc-50/50">
-          <h3 className="text-sm font-semibold text-zinc-900 flex items-center gap-2 mb-4">
-            <Globe className="w-4 h-4 text-zinc-700" /> Getting Started Guide
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="space-y-1.5">
-              <h4 className="text-xs font-bold text-zinc-900 uppercase tracking-wider">1. Find Destinations</h4>
-              <p className="text-xs text-zinc-500 leading-relaxed">
-                Go to the <Link to="/explore" className="text-zinc-900 font-medium underline underline-offset-2">Explore</Link> page. Browse through lists of countries, cities, or wonders of the world.
-              </p>
-            </div>
-            <div className="space-y-1.5">
-              <h4 className="text-xs font-bold text-zinc-900 uppercase tracking-wider">2. Log Your Visits</h4>
-              <p className="text-xs text-zinc-500 leading-relaxed">
-                Click on the circular checkmarks to log a place as visited. Your stats and overall completion bar will update instantly.
-              </p>
-            </div>
-            <div className="space-y-1.5">
-              <h4 className="text-xs font-bold text-zinc-900 uppercase tracking-wider">3. Submit Hidden Gems</h4>
-              <p className="text-xs text-zinc-500 leading-relaxed">
-                Have a secret spot? Submit it on the <Link to="/hidden-gems" className="text-zinc-900 font-medium underline underline-offset-2">Hidden Gems</Link> page to have it reviewed and verified by admins.
-              </p>
-            </div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+        {/* Exploration Progress Card */}
+        <div className="card bg-white rounded-xl border border-zinc-200 shadow-sm p-6 lg:col-span-2">
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-lg font-bold text-[#1A365D]">Exploration Progress</h2>
+            <span className="text-[10px] font-bold text-zinc-400 tracking-widest uppercase">Global Sync Active</span>
           </div>
-        </div>
-
-        {/* Rank + Overall Progress Row */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-8">
-          {/* Rank Card */}
-          <div className="card">
-            <div className="text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-3">Explorer Rank</div>
-            <div className="text-lg font-bold text-zinc-900">{rank.title}</div>
-            <p className="text-sm text-zinc-500 mt-1">{rank.desc}</p>
-          </div>
-
-          {/* Overall Progress */}
-          {stats?.overall && (
-            <div className="card lg:col-span-2">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                <div>
-                  <div className="text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-1">Overall Progress</div>
-                  <p className="text-sm text-zinc-600">
-                    <span className="text-zinc-900 font-bold text-lg">{stats.overall.visited}</span>
-                    <span className="text-zinc-400"> / {stats.overall.total} destinations</span>
-                  </p>
-                </div>
-                <div className="w-full sm:w-64">
-                  <div className="flex items-center justify-between text-xs font-medium mb-1.5">
-                    <span className="text-zinc-400">Completion</span>
-                    <span className="text-zinc-900 font-semibold">{stats.overall.percentage}%</span>
-                  </div>
-                  <div className="h-2 bg-zinc-100 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-gradient-to-r from-primary-600 to-accent-500 rounded-full transition-all duration-1000 ease-out"
-                      style={{ width: `${stats.overall.percentage}%` }}
-                    />
-                  </div>
-                </div>
+          
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
+            {rings.map((ring, idx) => (
+              <div key={idx} className="flex flex-col items-center p-4 rounded-xl bg-[#F7FAFC] border border-zinc-100">
+                <ProgressRing percentage={ring.percentage} color={ring.color} size={100} />
+                <span className="text-xs font-bold text-zinc-400 tracking-widest uppercase mt-4">{ring.label}</span>
               </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Badge Showcase Card */}
+        <div className="card bg-white rounded-xl border border-zinc-200 shadow-sm p-6 flex flex-col">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-lg font-bold text-[#1A365D]">Badge Showcase</h2>
+            <Link to="/badges" className="text-xs font-bold text-[#ED8936] hover:text-[#dd7d2e] transition-colors">
+              View All
+            </Link>
+          </div>
+
+          {recentBadges.length === 0 ? (
+            <div className="flex-1 flex items-center justify-center text-sm text-zinc-400">
+              No badges earned yet.
+            </div>
+          ) : (
+            <div className="space-y-4 flex-1">
+              {recentBadges.map((ub, idx) => {
+                const badge = typeof ub.badge === 'object' ? ub.badge : null;
+                if (!badge) return null;
+                
+                // Calculate days ago
+                const daysAgo = Math.floor((new Date() - new Date(ub.awardedAt)) / (1000 * 60 * 60 * 24));
+                const timeText = daysAgo === 0 ? 'Today' : `${daysAgo}d ago`;
+
+                return (
+                  <div key={idx} className="flex items-center gap-4 p-3.5 rounded-xl border border-zinc-100 bg-[#F7FAFC]">
+                    <div className="w-12 h-12 rounded-full bg-white border border-zinc-200 flex items-center justify-center text-2xl shadow-sm">
+                      {badge.icon || '🏆'}
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-bold text-[#1A365D]">{badge.name}</h4>
+                      <p className="text-xs text-zinc-500 mt-0.5 capitalize">
+                        {badge.level} • Earned {timeText}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>
+      </div>
 
-        {/* Category Stats */}
-        {statsLoading ? (
-          <LoadingSpinner text="Loading your exploration stats..." />
-        ) : stats ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8 animate-stagger">
-            {Object.entries(categoryInfo).map(([key, info], idx) => {
-              const catStat = stats[key] || { visited: 0, total: 0, percentage: 0 };
-              return (
-                <StatCard
-                  key={key}
-                  icon={info.icon}
-                  label={info.label}
-                  value={catStat.visited}
-                  total={catStat.total}
-                  percentage={catStat.percentage}
-                  delay={idx * 60}
-                />
-              );
-            })}
+      {/* Recent Logs Table */}
+      <div className="card bg-white rounded-xl border border-zinc-200 shadow-sm overflow-hidden">
+        <div className="flex items-center justify-between p-6 border-b border-zinc-100">
+          <h2 className="text-lg font-bold text-[#1A365D]">Recent Logs</h2>
+          <div className="flex items-center gap-2">
+            <button className="p-1.5 rounded text-zinc-400 hover:text-[#1A365D] hover:bg-zinc-50 transition-colors">
+              <LayoutGrid className="w-4 h-4" />
+            </button>
+            <button className="p-1.5 rounded bg-[#F7FAFC] text-[#1A365D] border border-zinc-200 transition-colors">
+              <List className="w-4 h-4" />
+            </button>
           </div>
-        ) : null}
+        </div>
 
-        {/* Badges and Profile Summary */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-8">
-          {/* Recent Badges */}
-          <div className="card lg:col-span-2">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-semibold text-zinc-900 flex items-center gap-2">
-                <BadgeCheck className="w-4 h-4 text-zinc-400" /> Recent Achievements
-              </h3>
-              <Link to="/badges" className="text-xs font-medium text-zinc-500 hover:text-zinc-900 flex items-center gap-0.5 transition-colors">
-                All Badges <ArrowRight className="w-3 h-3" />
-              </Link>
-            </div>
-
-            {user?.badges?.length === 0 ? (
-              <div className="py-8 text-center text-zinc-400 text-sm">
-                No badges earned yet. Start exploring to unlock achievements!
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {user?.badges?.slice(-2).map((ub, idx) => {
-                  const badge = typeof ub.badge === 'object' ? ub.badge : null;
-                  return badge ? (
-                    <div key={idx} className="p-4 rounded-lg bg-zinc-50 border border-zinc-100 flex items-center gap-3 hover:border-zinc-200 transition-colors">
-                      <span className="text-2xl">{badge.icon || '🏆'}</span>
-                      <div>
-                        <h4 className="text-sm font-semibold text-zinc-900">{badge.name}</h4>
-                        <p className="text-xs text-zinc-500 mt-0.5">{badge.description}</p>
-                        <span className="inline-block mt-1.5 text-xs text-zinc-500 font-medium bg-zinc-100 px-2 py-0.5 rounded capitalize">
-                          {badge.level}
-                        </span>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr>
+                <th className="px-6 py-4 text-xs font-bold text-zinc-400 tracking-wider uppercase border-b border-zinc-100">Location</th>
+                <th className="px-6 py-4 text-xs font-bold text-zinc-400 tracking-wider uppercase border-b border-zinc-100">Category</th>
+                <th className="px-6 py-4 text-xs font-bold text-zinc-400 tracking-wider uppercase border-b border-zinc-100">Date</th>
+                <th className="px-6 py-4 text-xs font-bold text-zinc-400 tracking-wider uppercase border-b border-zinc-100">Status</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-zinc-50">
+              {recentVisits.length === 0 ? (
+                <tr>
+                  <td colSpan="4" className="px-6 py-8 text-center text-sm text-zinc-400">
+                    No recent logs found. Start exploring!
+                  </td>
+                </tr>
+              ) : (
+                recentVisits.map((visit, idx) => (
+                  <tr key={idx} className="hover:bg-[#F7FAFC]/50 transition-colors">
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-md bg-[#ED8936]/10 flex items-center justify-center text-[#ED8936]">
+                          <MapPin className="w-4 h-4" />
+                        </div>
+                        <span className="text-sm font-semibold text-[#1A365D]">{visit.place?.name || 'Unknown Place'}</span>
                       </div>
-                    </div>
-                  ) : null;
-                })}
-              </div>
-            )}
-          </div>
-
-          {/* Profile Summary */}
-          <div className="card">
-            <h3 className="text-sm font-semibold text-zinc-900 flex items-center gap-2 mb-4">
-              <CalendarDays className="w-4 h-4 text-zinc-400" /> Summary
-            </h3>
-            <div className="space-y-0">
-              <div className="flex justify-between items-center text-sm py-3">
-                <span className="text-zinc-500">Total Visited</span>
-                <span className="font-semibold text-zinc-900">{stats?.overall?.visited || 0}</span>
-              </div>
-              <div className="flex justify-between items-center text-sm py-3 border-t border-zinc-100">
-                <span className="text-zinc-500">Badges Earned</span>
-                <span className="font-semibold text-zinc-900">{user?.badges?.length || 0}</span>
-              </div>
-              <div className="flex justify-between items-center text-sm py-3 border-t border-zinc-100">
-                <span className="text-zinc-500">Role</span>
-                <span className="font-semibold capitalize text-zinc-900">{user?.role}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Quick Navigation */}
-        <div className="mb-2">
-          <h2 className="text-sm font-semibold text-zinc-900 mb-3">Quick Navigation</h2>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 animate-stagger">
-          <Link
-            to="/explore"
-            className="card group hover:border-zinc-300 transition-all duration-200"
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg bg-zinc-100 text-zinc-600 flex items-center justify-center">
-                  <MapPin className="w-4 h-4" />
-                </div>
-                <div>
-                  <h3 className="font-medium text-zinc-900 text-sm">Explore Places</h3>
-                  <p className="text-xs text-zinc-400">Browse & log visits</p>
-                </div>
-              </div>
-              <ArrowRight className="w-4 h-4 text-zinc-300 group-hover:text-zinc-500 group-hover:translate-x-0.5 transition-all" />
-            </div>
-          </Link>
-
-          <Link
-            to="/badges"
-            className="card group hover:border-zinc-300 transition-all duration-200"
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg bg-zinc-100 text-zinc-600 flex items-center justify-center">
-                  <Trophy className="w-4 h-4" />
-                </div>
-                <div>
-                  <h3 className="font-medium text-zinc-900 text-sm">Your Badges</h3>
-                  <p className="text-xs text-zinc-400">
-                    {user?.badges?.length || 0} earned
-                  </p>
-                </div>
-              </div>
-              <ArrowRight className="w-4 h-4 text-zinc-300 group-hover:text-zinc-500 group-hover:translate-x-0.5 transition-all" />
-            </div>
-          </Link>
-
-          <Link
-            to="/hidden-gems"
-            className="card group hover:border-zinc-300 transition-all duration-200"
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-lg bg-zinc-100 text-zinc-600 flex items-center justify-center">
-                  <Sparkles className="w-4 h-4" />
-                </div>
-                <div>
-                  <h3 className="font-medium text-zinc-900 text-sm">Hidden Gems</h3>
-                  <p className="text-xs text-zinc-400">Submit discoveries</p>
-                </div>
-              </div>
-              <ArrowRight className="w-4 h-4 text-zinc-300 group-hover:text-zinc-500 group-hover:translate-x-0.5 transition-all" />
-            </div>
-          </Link>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="text-sm text-zinc-500 capitalize">{visit.place?.category || 'N/A'}</span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="text-sm text-zinc-500">
+                        {new Date(visit.visitedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase bg-[#2F855A]/10 text-[#2F855A]">
+                        Verified
+                      </span>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

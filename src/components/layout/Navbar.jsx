@@ -27,14 +27,20 @@ const Navbar = ({ onAuthOpen }) => {
     navigate('/');
   };
 
+  const isLandingPage = location.pathname === '/';
+
   const navLinks = user
     ? [
         { path: '/dashboard', label: 'Dashboard' },
         { path: '/explore', label: 'Explore' },
         { path: '/badges', label: 'Badges' },
         { path: '/hidden-gems', label: 'Hidden Gems' },
-        { path: '/about', label: 'About' },
-        { path: '/contact', label: 'Contact' },
+        ...(isLandingPage
+          ? [
+              { path: '/about', label: 'About' },
+              { path: '/contact', label: 'Contact' },
+            ]
+          : []),
       ]
     : [
         { path: '/about', label: 'About' },

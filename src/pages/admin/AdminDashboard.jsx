@@ -22,8 +22,7 @@ const AdminDashboard = () => {
   if (loading || !dashboardStats) return <LoadingSpinner text="Loading admin dashboard..." />;
 
   return (
-    <div className="min-h-screen pt-20 pb-12 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
+    <div className="w-full pb-12 animate-fade-in">
         <div className="mb-8">
           <h1 className="text-3xl md:text-4xl font-bold text-zinc-900 mb-2 tracking-tight">Admin Dashboard</h1>
           <p className="text-zinc-500">Overview of your platform's activity.</p>
@@ -85,7 +84,6 @@ const AdminDashboard = () => {
           </div>
         )}
       </div>
-    </div>
   );
 };
 
