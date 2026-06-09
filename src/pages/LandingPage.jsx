@@ -95,8 +95,8 @@ const LandingPage = ({ onAuthOpen }) => {
 
           {/* Headline */}
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black text-zinc-900 leading-tight mb-6 animate-slide-up tracking-tight">
-            Track Your World{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-accent-500">Adventures</span>
+            Track Your Travel Adventure{' '}
+            {/* <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-accent-500">Adventures</span> */}
           </h1>
 
           {/* Subtitle */}
