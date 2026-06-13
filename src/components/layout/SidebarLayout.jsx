@@ -12,11 +12,14 @@ import {
   ShieldCheck,
   Settings,
   HelpCircle,
+  Bookmark,
   LogOut,
   Bell,
   Search,
-  Plus,
-  Sparkles
+  Sparkles,
+  Map as MapIcon,
+  FileText,
+  Gem
 } from 'lucide-react';
 
 const SidebarLayout = () => {
@@ -38,9 +41,11 @@ const SidebarLayout = () => {
 
   const mainLinks = [
     { path: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { path: '/explore', label: 'Explore', icon: Compass },
+    { path: '/explore', label: 'Explore', icon: MapIcon },
+    { path: '/bucket-list', label: 'Bucket List', icon: Bookmark },
+    { path: '/passport', label: 'Digital Passport', icon: FileText },
     { path: '/badges', label: 'Badges', icon: Trophy },
-    { path: '/hidden-gems', label: 'Hidden Gems', icon: Sparkles },
+    { path: '/hidden-gems', label: 'Hidden Gems', icon: Gem },
     ...(user?.role === 'admin' ? [{ path: '/admin', label: 'Admin Queue', icon: ShieldCheck }] : []),
   ];
 

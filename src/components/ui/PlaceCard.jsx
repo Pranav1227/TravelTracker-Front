@@ -1,4 +1,4 @@
-import { Check, MapPin } from 'lucide-react';
+import { Check, MapPin, Bookmark, Camera, Image as ImageIcon } from 'lucide-react';
 
 const categoryColors = {
   country: 'bg-blue-50 text-blue-700 border-blue-200',
@@ -21,11 +21,15 @@ const categoryIcons = {
 const PlaceCard = ({
   place,
   isVisited,
+  isBucketList,
   onToggle,
+  onToggleBucketList,
   isToggling,
   onExploreState,
   onExploreCity,
   onExploreCountry,
+  onAddMemory,
+  visitRecord,
 }) => {
   const isParentCategory =
     place.category === 'state' ||
@@ -46,12 +50,17 @@ const PlaceCard = ({
 
   return (
     <div
-      className={`card group cursor-pointer transition-all duration-200 hover:border-zinc-300 relative overflow-hidden ${
-        isVisited ? 'bg-zinc-50 border-zinc-300' : ''
+      className={`card group cursor-pointer transition-all duration-200 hover:border-zinc-300 relative overflow-hidden bg-white border border-zinc-200 ${
+        isVisited ? 'bg-zinc-50' : ''
       }`}
       onClick={handleCardClick}
     >
       <div className="flex items-start justify-between gap-3">
+        {visitRecord?.memoryPhotoUrl && !isParentCategory && (
+          <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0 border border-zinc-200">
+            <img src={`http://localhost:5000${visitRecord.memoryPhotoUrl}`} alt="Memory" className="w-full h-full object-cover" />
+          </div>
+        )}
         <div className="flex-1 min-w-0">
           {/* Category badge */}
           <span
@@ -121,20 +130,50 @@ const PlaceCard = ({
             )}
           </div>
         ) : (
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onToggle(place._id);
-            }}
-            disabled={isToggling}
-            className={`flex-shrink-0 w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-200 ${
-              isVisited
-                ? 'bg-zinc-900 text-white'
-                : 'bg-zinc-100 text-zinc-300 hover:bg-zinc-200 hover:text-zinc-600 border border-zinc-200'
-            } ${isToggling ? 'animate-pulse' : ''}`}
-          >
-            <Check className="w-4 h-4" />
-          </button>
+          <div className="flex flex-col items-center gap-2">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                if (onToggleBucketList) onToggleBucketList(place._id);
+              }}
+              disabled={isToggling}
+              title={isBucketList ? "Remove from Bucket List" : "Add to Bucket List"}
+              className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 ${
+                isBucketList
+                  ? 'bg-amber-100 text-amber-600'
+                  : 'bg-zinc-50 text-zinc-300 hover:bg-zinc-100 hover:text-amber-500 border border-zinc-100'
+              } ${isToggling ? 'opacity-50' : ''}`}
+            >
+              <Bookmark className={`w-3.5 h-3.5 ${isBucketList ? 'fill-current' : ''}`} />
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggle(place._id);
+              }}
+              disabled={isToggling}
+              title={isVisited ? "Remove Visit" : "Mark as Visited"}
+              className={`flex-shrink-0 w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-200 ${
+                isVisited
+                  ? 'bg-zinc-900 text-white'
+                  : 'bg-zinc-100 text-zinc-300 hover:bg-zinc-200 hover:text-zinc-600 border border-zinc-200'
+              } ${isToggling ? 'animate-pulse' : ''}`}
+            >
+              <Check className="w-4 h-4" />
+            </button>
+            {isVisited && onAddMemory && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onAddMemory(place);
+                }}
+                title="Add Memory Photo"
+                className="flex-shrink-0 w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-200 bg-primary-50 text-primary-600 hover:bg-primary-100 border border-primary-100 mt-1"
+              >
+                <Camera className="w-4 h-4" />
+              </button>
+            )}
+          </div>
         )}
       </div>
     </div>

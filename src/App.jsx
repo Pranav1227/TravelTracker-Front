@@ -17,8 +17,11 @@ import DashboardPage from './pages/DashboardPage';
 import ExplorePage from './pages/ExplorePage';
 import BadgesPage from './pages/BadgesPage';
 import HiddenGemsPage from './pages/HiddenGemsPage';
+import BucketListDetailPage from './pages/BucketListDetailPage';
+import PassportPage from './pages/PassportPage';
 import ProfilePage from './pages/ProfilePage';
 import NotificationPage from './pages/NotificationPage';
+import BucketListPage from './pages/BucketListPage';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -33,11 +36,7 @@ function App() {
   const dispatch = useDispatch();
   const location = useLocation();
 
-  // Light mode only
-  useEffect(() => {
-    document.documentElement.classList.remove('dark');
-    localStorage.setItem('theme', 'light');
-  }, []);
+  // Layout classes handled in components
 
   // Fetch profile on mount if token exists
   useEffect(() => {
@@ -107,6 +106,9 @@ function App() {
             <Route path="/explore" element={<ProtectedRoute><ExplorePage /></ProtectedRoute>} />
             <Route path="/badges" element={<ProtectedRoute><BadgesPage /></ProtectedRoute>} />
             <Route path="/hidden-gems" element={<ProtectedRoute><HiddenGemsPage /></ProtectedRoute>} />
+            <Route path="/bucket-list" element={<ProtectedRoute><BucketListPage /></ProtectedRoute>} />
+            <Route path="/bucket-lists/:id" element={<ProtectedRoute><BucketListDetailPage /></ProtectedRoute>} />
+            <Route path="/passport" element={<ProtectedRoute><PassportPage /></ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
             <Route path="/notifications" element={<ProtectedRoute><NotificationPage /></ProtectedRoute>} />
             

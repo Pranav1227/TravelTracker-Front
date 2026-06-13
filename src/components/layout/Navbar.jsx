@@ -33,6 +33,8 @@ const Navbar = ({ onAuthOpen }) => {
     ? [
         { path: '/dashboard', label: 'Dashboard' },
         { path: '/explore', label: 'Explore' },
+        { path: '/bucket-list', label: 'Bucket List' },
+        { path: '/passport', label: 'Passport' },
         { path: '/badges', label: 'Badges' },
         { path: '/hidden-gems', label: 'Hidden Gems' },
         ...(isLandingPage

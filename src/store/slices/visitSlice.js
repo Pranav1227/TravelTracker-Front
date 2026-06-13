@@ -40,12 +40,26 @@ export const fetchVisitedIds = createAsyncThunk(
 
 export const toggleVisit = createAsyncThunk(
   'visits/toggleVisit',
-  async ({ placeId, notes = '' }, { rejectWithValue }) => {
+  async ({ placeId, status }, { rejectWithValue }) => {
     try {
-      const { data } = await API.post(`/visits/toggle/${placeId}`, { notes });
-      return { placeId, ...data };
+      const { data } = await API.post(`/visits/toggle/${placeId}`, { status });
+      return data; // { added: true/false, visit, removed: true/false }
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || 'Failed to toggle visit');
+    }
+  }
+);
+
+export const logMemory = createAsyncThunk(
+  'visits/logMemory',
+  async ({ placeId, formData }, { rejectWithValue }) => {
+    try {
+      const { data } = await API.post(`/visits/${placeId}/memory`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || 'Failed to upload memory');
     }
   }
 );
@@ -56,6 +70,7 @@ const visitSlice = createSlice({
     visits: [],
     stats: null,
     visitedIds: [],
+    bucketListIds: [],
     loading: false,
     statsLoading: false,
     toggleLoading: null, // stores placeId being toggled
@@ -87,21 +102,47 @@ const visitSlice = createSlice({
         state.error = action.payload;
       })
       .addCase(fetchVisitedIds.fulfilled, (state, action) => {
-        state.visitedIds = action.payload;
+        state.visitedIds = action.payload.visitedIds || [];
+        state.bucketListIds = action.payload.bucketListIds || [];
       })
       .addCase(toggleVisit.pending, (state, action) => {
         state.toggleLoading = action.meta.arg.placeId;
       })
       .addCase(toggleVisit.fulfilled, (state, action) => {
         state.toggleLoading = null;
-        const { placeId, visited } = action.payload;
-        if (visited) {
-          state.visitedIds.push(placeId);
-        } else {
-          state.visitedIds = state.visitedIds.filter((id) => id !== placeId);
+        const { placeId, added, removed, updated, status } = action.payload;
+        
+        if (removed) {
+          state.visitedIds = state.visitedIds.filter(id => id !== placeId);
+          state.bucketListIds = state.bucketListIds.filter(id => id !== placeId);
+        } else if (added || updated) {
+          if (status === 'visited') {
+            if (!state.visitedIds.includes(placeId)) state.visitedIds.push(placeId);
+            state.bucketListIds = state.bucketListIds.filter(id => id !== placeId);
+          } else if (status === 'bucketlist') {
+            if (!state.bucketListIds.includes(placeId)) state.bucketListIds.push(placeId);
+            state.visitedIds = state.visitedIds.filter(id => id !== placeId);
+          }
         }
       })
       .addCase(toggleVisit.rejected, (state, action) => {
+        state.toggleLoading = null;
+        state.error = action.payload;
+      })
+      // Log Memory
+      .addCase(logMemory.pending, (state, action) => {
+        state.toggleLoading = action.meta.arg.placeId;
+      })
+      .addCase(logMemory.fulfilled, (state, action) => {
+        state.toggleLoading = null;
+        const index = state.visits.findIndex(v => v._id === action.payload._id);
+        if (index !== -1) {
+          state.visits[index] = action.payload;
+        } else {
+          state.visits.push(action.payload);
+        }
+      })
+      .addCase(logMemory.rejected, (state, action) => {
         state.toggleLoading = null;
         state.error = action.payload;
       });

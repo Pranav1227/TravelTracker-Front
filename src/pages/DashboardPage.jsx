@@ -3,7 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { fetchExplorationStats, fetchMyVisits } from '../store/slices/visitSlice';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
-import { MapPin, LayoutGrid, List } from 'lucide-react';
+import { MapPin, LayoutGrid, List, Download, Bookmark } from 'lucide-react';
+import html2canvas from 'html2canvas';
 
 const ProgressRing = ({ percentage = 0, size = 96, strokeWidth = 8, color = '#18181b', trackColor = '#f4f4f5' }) => {
   const radius = (size - strokeWidth) / 2;
@@ -54,9 +55,31 @@ const DashboardPage = () => {
     dispatch(fetchMyVisits());
   }, [dispatch]);
 
-  const sortedVisits = visits ? [...visits].sort((a, b) => new Date(b.visitedAt) - new Date(a.visitedAt)) : [];
-  const recentVisits = sortedVisits.slice(0, 5);
+  const completedVisits = visits ? visits.filter(v => v.status === 'visited').sort((a, b) => new Date(b.visitedAt) - new Date(a.visitedAt)) : [];
+  const bucketListVisits = visits ? visits.filter(v => v.status === 'bucketlist').sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) : [];
+  const recentVisits = completedVisits.slice(0, 5);
   const recentBadges = user?.badges?.slice(-2).reverse() || [];
+  
+  const [activeTab, setActiveTab] = useState('logs');
+
+  const exportStats = async () => {
+    const element = document.getElementById('stats-export-template');
+    if (element) {
+      try {
+        element.style.display = 'block';
+        const canvas = await html2canvas(element, { scale: 2, backgroundColor: '#1A365D' });
+        element.style.display = 'none';
+        const data = canvas.toDataURL('image/png');
+        const link = document.createElement('a');
+        link.href = data;
+        link.download = 'my-travel-stats.png';
+        link.click();
+      } catch (err) {
+        console.error('Error exporting stats', err);
+        element.style.display = 'none';
+      }
+    }
+  };
 
   if (statsLoading || visitsLoading) {
     return (
@@ -82,12 +105,20 @@ const DashboardPage = () => {
           <h1 className="text-3xl font-bold text-[#1A365D]">Welcome back, Explorer!</h1>
           <p className="text-zinc-500 mt-1">Your journey map is looking dense today.</p>
         </div>
-        <Link 
-          to="/explore" 
-          className="flex items-center gap-2 bg-[#1A365D] hover:bg-[#112440] text-white px-5 py-2.5 rounded-lg font-semibold transition-colors self-start sm:self-auto shadow-sm"
-        >
-          <MapPin className="w-4 h-4" /> Log New Visit
-        </Link>
+        <div className="flex items-center gap-3 self-start sm:self-auto">
+          <button 
+            onClick={exportStats}
+            className="flex items-center gap-2 bg-[#F7FAFC] hover:bg-zinc-100 text-[#1A365D] border border-zinc-200 px-5 py-2.5 rounded-lg font-semibold transition-colors shadow-sm"
+          >
+            <Download className="w-4 h-4" /> Export Stats
+          </button>
+          <Link 
+            to="/explore" 
+            className="flex items-center gap-2 bg-[#1A365D] hover:bg-[#112440] text-white px-5 py-2.5 rounded-lg font-semibold transition-colors shadow-sm"
+          >
+            <MapPin className="w-4 h-4" /> Log Visit
+          </Link>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
@@ -150,18 +181,21 @@ const DashboardPage = () => {
         </div>
       </div>
 
-      {/* Recent Logs Table */}
-      <div className="card bg-white rounded-xl border border-zinc-200 shadow-sm overflow-hidden">
-        <div className="flex items-center justify-between p-6 border-b border-zinc-100">
-          <h2 className="text-lg font-bold text-[#1A365D]">Recent Logs</h2>
-          <div className="flex items-center gap-2">
-            <button className="p-1.5 rounded text-zinc-400 hover:text-[#1A365D] hover:bg-zinc-50 transition-colors">
-              <LayoutGrid className="w-4 h-4" />
-            </button>
-            <button className="p-1.5 rounded bg-[#F7FAFC] text-[#1A365D] border border-zinc-200 transition-colors">
-              <List className="w-4 h-4" />
-            </button>
-          </div>
+      {/* Tabs & Table */}
+      <div className="card bg-white rounded-xl border border-zinc-200 shadow-sm overflow-hidden mb-6">
+        <div className="flex items-center border-b border-zinc-100">
+          <button 
+            className={`px-6 py-4 font-bold text-sm transition-colors border-b-2 ${activeTab === 'logs' ? 'text-[#1A365D] border-[#1A365D]' : 'text-zinc-400 border-transparent hover:text-zinc-600'}`}
+            onClick={() => setActiveTab('logs')}
+          >
+            Recent Logs
+          </button>
+          <button 
+            className={`px-6 py-4 font-bold text-sm transition-colors border-b-2 ${activeTab === 'bucketlist' ? 'text-[#1A365D] border-[#1A365D]' : 'text-zinc-400 border-transparent hover:text-zinc-600'}`}
+            onClick={() => setActiveTab('bucketlist')}
+          >
+            Bucket List ({bucketListVisits.length})
+          </button>
         </div>
 
         <div className="overflow-x-auto">
@@ -175,43 +209,104 @@ const DashboardPage = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-zinc-50">
-              {recentVisits.length === 0 ? (
-                <tr>
-                  <td colSpan="4" className="px-6 py-8 text-center text-sm text-zinc-400">
-                    No recent logs found. Start exploring!
-                  </td>
-                </tr>
-              ) : (
-                recentVisits.map((visit, idx) => (
-                  <tr key={idx} className="hover:bg-[#F7FAFC]/50 transition-colors">
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-md bg-[#ED8936]/10 flex items-center justify-center text-[#ED8936]">
-                          <MapPin className="w-4 h-4" />
-                        </div>
-                        <span className="text-sm font-semibold text-[#1A365D]">{visit.place?.name || 'Unknown Place'}</span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="text-sm text-zinc-500 capitalize">{visit.place?.category || 'N/A'}</span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="text-sm text-zinc-500">
-                        {new Date(visit.visitedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase bg-[#2F855A]/10 text-[#2F855A]">
-                        Verified
-                      </span>
+              {activeTab === 'logs' ? (
+                recentVisits.length === 0 ? (
+                  <tr>
+                    <td colSpan="4" className="px-6 py-8 text-center text-sm text-zinc-400">
+                      No recent logs found. Start exploring!
                     </td>
                   </tr>
-                ))
+                ) : (
+                  recentVisits.map((visit, idx) => (
+                    <tr key={idx} className="hover:bg-[#F7FAFC]/50 transition-colors">
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-3">
+                          {visit.memoryPhotoUrl ? (
+                            <img src={`http://localhost:5000${visit.memoryPhotoUrl}`} alt="Memory" className="w-10 h-10 rounded-md object-cover border border-zinc-200" />
+                          ) : (
+                            <div className="w-10 h-10 rounded-md bg-[#ED8936]/10 flex items-center justify-center text-[#ED8936]">
+                              <MapPin className="w-5 h-5" />
+                            </div>
+                          )}
+                          <div>
+                            <span className="text-sm font-semibold text-[#1A365D] block">{visit.place?.name || 'Unknown Place'}</span>
+                            {visit.memoryNote && <span className="text-xs text-zinc-500 line-clamp-1 mt-0.5">{visit.memoryNote}</span>}
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="text-sm text-zinc-500 capitalize">{visit.place?.category || 'N/A'}</span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="text-sm text-zinc-500">
+                          {new Date(visit.visitedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase bg-[#2F855A]/10 text-[#2F855A]">
+                          Verified
+                        </span>
+                      </td>
+                    </tr>
+                  ))
+                )
+              ) : (
+                bucketListVisits.length === 0 ? (
+                  <tr>
+                    <td colSpan="4" className="px-6 py-8 text-center text-sm text-zinc-400">
+                      Your bucket list is empty. Add places you want to visit!
+                    </td>
+                  </tr>
+                ) : (
+                  bucketListVisits.map((visit, idx) => (
+                    <tr key={idx} className="hover:bg-[#F7FAFC]/50 transition-colors">
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-md bg-amber-100 flex items-center justify-center text-amber-600">
+                            <Bookmark className="w-4 h-4" />
+                          </div>
+                          <span className="text-sm font-semibold text-[#1A365D]">{visit.place?.name || 'Unknown Place'}</span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="text-sm text-zinc-500 capitalize">{visit.place?.category || 'N/A'}</span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="text-sm text-zinc-500">
+                          {new Date(visit.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase bg-amber-100 text-amber-700">
+                          Bucket List
+                        </span>
+                      </td>
+                    </tr>
+                  ))
+                )
               )}
             </tbody>
           </table>
         </div>
       </div>
+
+      {/* Hidden Export Template */}
+      <div id="stats-export-template" style={{ display: 'none', width: '800px', padding: '40px', background: 'linear-gradient(to bottom right, #1A365D, #112440)', borderRadius: '24px' }}>
+        <h1 style={{ color: 'white', fontSize: '36px', fontWeight: 'bold', marginBottom: '12px' }}>TravelTracker</h1>
+        <p style={{ color: '#E2E8F0', fontSize: '24px', marginBottom: '40px', fontWeight: '500' }}>
+          I've explored <span style={{ color: '#48BB78', fontWeight: 'bold' }}>{stats?.overall?.percentage || 0}%</span> of the World! 🌍
+        </p>
+        <div style={{ display: 'flex', gap: '32px', justifyItems: 'center', marginBottom: '20px' }}>
+            {rings.map((ring, idx) => (
+              <div key={idx} style={{ background: 'rgba(255,255,255,0.1)', padding: '24px', borderRadius: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', width: '160px' }}>
+                <ProgressRing percentage={ring.percentage} color={ring.color} trackColor="rgba(255,255,255,0.2)" size={100} />
+                <span style={{ color: 'white', fontSize: '14px', fontWeight: 'bold', letterSpacing: '0.1em', marginTop: '16px' }}>{ring.label}</span>
+              </div>
+            ))}
+        </div>
+        <p style={{ color: '#A0AEC0', fontSize: '14px', textAlign: 'center', marginTop: '40px' }}>Generated by TravelTracker App</p>
+      </div>
+
     </div>
   );
 };
